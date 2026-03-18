@@ -6,7 +6,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HostController;
 use App\Http\Controllers\LogementController;
 use App\Http\Controllers\ReservationController;
-Route::get('/content', [LogementController::class, 'index'])->name('content');
+use App\Http\Controllers\ContentController;
+
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
@@ -28,3 +30,6 @@ Route::post('/reservations', [ReservationController::class, 'store'])->name('res
 Route::get('/marrakech' , function(){
     return view('villes.marakech');
 })->name('marrakech');
+
+
+Route::get('/content', [ContentController::class, 'index'])->name('content');

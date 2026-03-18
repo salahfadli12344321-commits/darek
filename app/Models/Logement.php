@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Avis;
+use App\Models\LogementImage;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Ville;
 
 class Logement extends Model
 {
@@ -31,16 +35,15 @@ class Logement extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function images()
-    {
-        return $this->hasMany(logementImage::class);
-    }
+   public function images()
+{
+    return $this->hasMany(LogementImage::class, 'logement_id');
+}
 
-    public function reservations()
-    {
-        return $this->hasMany(Reservation::class);
-    }
-
+public function villeRelation()
+{
+    return $this->belongsTo(Ville::class, 'id_ville', 'id_ville');
+}
     public function avis()
     {
         return $this->hasMany(Avis::class);

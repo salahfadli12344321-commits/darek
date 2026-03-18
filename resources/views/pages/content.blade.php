@@ -393,222 +393,88 @@
 }
 
 </style>
-{{-- 
 
-  <div class="container search-wrap">
-        <div class="search-bar">
-            <div class="search-item destination">
-                <small>Destination</small>
-                <input type="text" placeholder="Rechercher une destination" id="destinationInput">
-                <div class="dropdown" id="dropdown"></div>
-            </div>
 
-            <div class="divider"></div>
-
-            <div class="search-item">
-                <small>Dates</small>
-                <input type="date">
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="search-item">
-                <small>Voyageurs</small>
-                <input type="text" placeholder="Ajouter des voyageurs">
-            </div>
-
-            <button class="search-btn" aria-label="Search">
-                <span class="search-icon-wrap">
-                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10a5 5 0 1110 0A5 5 0 015 10z"/>
-                    </svg>
-                </span>
-            </button>
+ <form action="{{ route('content') }}" method="GET" class="container search-wrap">
+    <div class="search-bar">
+        <div class="search-item destination">
+            <small>Destination</small>
+            <input
+                type="text"
+                name="destination"
+                placeholder="Rechercher une destination"
+                id="destinationInput"
+                value="{{ request('destination') }}"
+            >
+            <div class="dropdown" id="dropdown"></div>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="search-item">
+            <small>Dates</small>
+            <input type="date" name="date" value="{{ request('date') }}">
+        </div>
+
+        <div class="divider"></div>
+        <select name="type">
+    <option value="">Choisir un type🎁</option>
+    <option value="Appartement" {{ request('type') == 'Appartement' ? 'selected' : '' }}>Appartement</option>
+    <option value="Villa" {{ request('type') == 'Villa' ? 'selected' : '' }}>Villa</option>
+    <option value="Hôtel" {{ request('type') == 'Hôtel' ? 'selected' : '' }}>Hôtel</option>
+</select>
+
+        <button type="submit" class="search-btn" aria-label="Search">
+            <span class="search-icon-wrap">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10a5 5 0 1110 0A5 5 0 015 10z"/>
+                </svg>
+            </span>
+        </button>
     </div>
-   
-
-
+</form>
+@if(request('destination'))
 <section class="section">
     <div class="section-head">
-        <div class="section-title">Maisons populaires à Casablanca</div>
-        <button class="section-link">→</button>
-    </div>
+<div class="section-title">
+    Résultats
+    @if(request('type')) pour {{ request('type') }} @endif
+    @if(request('destination')) à {{ request('destination') }} @endif
+</div>    </div>
 
     <div class="slider">
-        <div class="arrow left" title="Prev"><span>‹</span></div>
-        <div class="arrow right" title="Next"><span>›</span></div>
-
         <div class="cards">
-            <div class="card">
-              <div class="card-img">
-    <a href="{{ route('logement.show', 1) }}">
-        <img src="{{ asset('images/hero.jpg') }}" alt="Appartement à Fes">
-    </a>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement à Casablanca</div>
-                    <div class="card-sub">11–19 mars</div>
-                    <div class="card-price">460DH par nuit</div>
-                </div>
-            </div>
+            @forelse($logements as $logement)
+                @php
+                    $mainImage = $logement->images->where('is_primary', 1)->first();
+                    $imagePath = $mainImage ? asset($mainImage->image_path) : asset('images/default.jpg');
+                @endphp
 
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/imagg.png') }}" alt="Studio moderne à Casablanca">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
+                <div class="card">
+                    <div class="card-img">
+                        <img src="{{ $imagePath }}" alt="{{ $logement->titre }}">
+                        <div class="badge">Coup de cœur</div>
+                        <div class="heart" title="Save">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="card-title">{{ $logement->titre }}</div>
+                        <div class="card-sub">{{ $logement->ville }}</div>
+                        <div class="card-price">{{ $logement->prix }}{{ $logement->devise }} par nuit</div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="card-title">Studio moderne à Casablanca</div>
-                    <div class="card-sub">13–15 mars</div>
-                    <div class="card-price">500DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/hero1.jpg') }}" alt="Appartement avec vue à Casablanca">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement avec vue</div>
-                    <div class="card-sub">14–18 mars</div>
-                    <div class="card-price">380DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/hero4.jpg') }}" alt="Appartement en bord de mer">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement en bord de mer</div>
-                    <div class="card-sub">13–15 mars</div>
-                    <div class="card-price">580DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/hero2.jpg') }}" alt="Appartement élégant à Casablanca">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement élégant</div>
-                    <div class="card-sub">20–24 mars</div>
-                    <div class="card-price">350DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/hero.jpg') }}" alt="Logement cosy à Casablanca">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title"><a href="#">Logement cosy</a></div>
-                    <div class="card-sub">13–15 mars</div>
-                    <div class="card-price">250DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/imagg.png') }}" alt="Appartement El Maarif">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement . El Maarif</div>
-                    <div class="card-sub">14–18 avril</div>
-                    <div class="card-price">380DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/imag.jpeg') }}" alt="Appartement Bourgogne">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement . Bourgogne</div>
-                    <div class="card-sub">22–25 avril</div>
-                    <div class="card-price">300DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/hero.jpg') }}" alt="Appartement avec vue à Casablanca">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement avec vue</div>
-                    <div class="card-sub">28–31 avril</div>
-                    <div class="card-price">300DH par nuit</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/casa10.jpeg') }}" alt="Appartement à Casablanca">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">Appartement</div>
-                    <div class="card-sub">14–18 avril</div>
-                    <div class="card-price">380DH par nuit</div>
-                </div>
-            </div>
+            @empty
+                <p>Aucun logement trouvé pour cette destination.</p>
+            @endforelse
         </div>
     </div>
 </section>
-
+@endif
+@if(!request('destination'))
 <section class="section">
     <div class="section-head">
         <div class="section-title">Hôtels à la une(Fes)</div>
@@ -622,7 +488,7 @@
         <div class="cards">
             <div class="card">
                 <div class="card-img">
-                    <img src="{{ asset('images/hote1.jpeg') }}" alt="Hôtels Mérinides">
+                    <img src="{{ asset('images/images/fes1n4.jpeg') }}" alt="Hôtels Mérinides">
                     <div class="badge">Coup de cœur</div>
                     <div class="heart" title="Save">
                         <svg viewBox="0 0 24 24">
@@ -702,7 +568,7 @@
 
             <div class="card">
                 <div class="card-img">
-                    <img src="{{ asset('images/hote6.jpeg') }}" alt="Riad Kawan">
+                    <img src="{{ asset('images/images.jpeg') }}" alt="Riad Kawan">
                     <div class="badge">Coup de cœur</div>
                     <div class="heart">
                         <svg viewBox="0 0 24 24">
@@ -961,12 +827,550 @@
     </div>
 </section>
 
+
+<section class="section">
+    <div class="section-head">
+        <div class="section-title">A LA UNE A JADIDA</div>
+        <button class="section-link">→</button>
+    </div>
+
+    <div class="slider">
+        <div class="arrow left" title="Prev"><span>‹</span></div>
+        <div class="arrow right" title="Next"><span>›</span></div>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Maison à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart" title="Save">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Villa à Tanger</div>
+                    <div class="card-sub">12–16 avril</div>
+                    <div class="card-price">1800DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero2.jpg') }}" alt="Appartement à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement vue mer</div>
+                    <div class="card-sub">18–22 avril</div>
+                    <div class="card-price">520DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero1.jpg') }}" alt="Maison moderne à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Maison moderne</div>
+                    <div class="card-sub">21–24 avril</div>
+                    <div class="card-price">700DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero3.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Logement cosy</div>
+                    <div class="card-sub">25–28 avril</div>
+                    <div class="card-price">430DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero4.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">20–24 avril</div>
+                    <div class="card-price">340DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero2.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">14–18 avril</div>
+                    <div class="card-price">840DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">8–12 avril</div>
+                    <div class="card-price">660DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/herp.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">14–21 avril</div>
+                    <div class="card-price">950DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero0.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">7–11avril</div>
+                    <div class="card-price">1330DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement en Residence</div>
+                    <div class="card-sub">14–18 avril</div>
+                    <div class="card-price">510DH par nuit</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="section-head">
+        <div class="section-title">Maisons populaires à RABAT</div>
+        <button class="section-link">→</button>
+    </div>
+
+    <div class="slider">
+        <div class="arrow left" title="Prev"><span>‹</span></div>
+        <div class="arrow right" title="Next"><span>›</span></div>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Maison à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart" title="Save">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Villa à Tanger</div>
+                    <div class="card-sub">12–16 avril</div>
+                    <div class="card-price">1800DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero2.jpg') }}" alt="Appartement à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement vue mer</div>
+                    <div class="card-sub">18–22 avril</div>
+                    <div class="card-price">520DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero1.jpg') }}" alt="Maison moderne à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Maison moderne</div>
+                    <div class="card-sub">21–24 avril</div>
+                    <div class="card-price">700DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero3.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Logement cosy</div>
+                    <div class="card-sub">25–28 avril</div>
+                    <div class="card-price">430DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero4.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">20–24 avril</div>
+                    <div class="card-price">340DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero2.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">14–18 avril</div>
+                    <div class="card-price">840DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">8–12 avril</div>
+                    <div class="card-price">660DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/herp.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">14–21 avril</div>
+                    <div class="card-price">950DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero0.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">7–11avril</div>
+                    <div class="card-price">1330DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement en Residence</div>
+                    <div class="card-sub">14–18 avril</div>
+                    <div class="card-price">510DH par nuit</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section">
+    <div class="section-head">
+        <div class="section-title">Maisons populaires à Tanger</div>
+        <button class="section-link">→</button>
+    </div>
+
+    <div class="slider">
+        <div class="arrow left" title="Prev"><span>‹</span></div>
+        <div class="arrow right" title="Next"><span>›</span></div>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Maison à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart" title="Save">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Villa à Tanger</div>
+                    <div class="card-sub">12–16 avril</div>
+                    <div class="card-price">1800DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero2.jpg') }}" alt="Appartement à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement vue mer</div>
+                    <div class="card-sub">18–22 avril</div>
+                    <div class="card-price">520DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero1.jpg') }}" alt="Maison moderne à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Maison moderne</div>
+                    <div class="card-sub">21–24 avril</div>
+                    <div class="card-price">700DH par nuit</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero3.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Logement cosy</div>
+                    <div class="card-sub">25–28 avril</div>
+                    <div class="card-price">430DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero4.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">20–24 avril</div>
+                    <div class="card-price">340DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero2.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">14–18 avril</div>
+                    <div class="card-price">840DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">8–12 avril</div>
+                    <div class="card-price">660DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/herp.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">14–21 avril</div>
+                    <div class="card-price">950DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/hero0.jpg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement . Tanger</div>
+                    <div class="card-sub">7–11avril</div>
+                    <div class="card-price">1330DH par nuit</div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="card-img">
+                    <img src="{{ asset('images/imag.jpeg') }}" alt="Logement cosy à Tanger">
+                    <div class="badge">Coup de cœur</div>
+                    <div class="heart">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Appartement en Residence</div>
+                    <div class="card-sub">14–18 avril</div>
+                    <div class="card-price">510DH par nuit</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@endif
 @endsection
 
 @section('footer')
 
 
-@endsection --}}
+@endsection 
 @extends('shared.app')
 
 @section('content')
