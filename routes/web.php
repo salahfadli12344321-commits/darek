@@ -6,11 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HostController;
 use App\Http\Controllers\LogementController;
 use App\Http\Controllers\ReservationController;
-Route::get('content', function () {
-    return view('pages.content');
-})->name('content');
-
-
+Route::get('/content', [LogementController::class, 'index'])->name('content');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 

@@ -393,7 +393,7 @@
 }
 
 </style>
-
+{{-- 
 
   <div class="container search-wrap">
         <div class="search-bar">
@@ -441,14 +441,10 @@
 
         <div class="cards">
             <div class="card">
-                <div class="card-img">
-                    <img src="{{ asset('images/hero.jpg') }}" alt="Appartement à Casablanca">
-                    <div class="badge">Coup de cœur</div>
-                    <div class="heart" title="Save">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21s-7-4.6-9.3-8.5C.7 9.1 2.4 6.5 5.4 6.2c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3 .3 4.7 2.9 2.7 6.3C19 16.4 12 21 12 21z"/>
-                        </svg>
-                    </div>
+              <div class="card-img">
+    <a href="{{ route('logement.show', 1) }}">
+        <img src="{{ asset('images/hero.jpg') }}" alt="Appartement à Fes">
+    </a>
                 </div>
                 <div class="card-body">
                     <div class="card-title">Appartement à Casablanca</div>
@@ -969,5 +965,52 @@
 
 @section('footer')
 
+
+@endsection --}}
+@extends('shared.app')
+
+@section('content')
+
+@forelse($logementsParVille as $ville => $logements)
+    <section class="section">
+        <div class="section-head">
+            <div class="section-title">Logements à {{ $ville }}</div>
+        </div>
+
+        <div class="cards">
+            @foreach($logements as $logement)
+                <div class="card">
+                    <div class="card-img">
+                        <a href="{{ route('logement.show', $logement->id) }}">
+                            <img 
+                                src="{{ $logement->image_principale ? asset('storage/' . $logement->image_principale) : asset('images/hero.jpg') }}" 
+                                alt="{{ $logement->titre }}"
+                            >
+                        </a>
+                        <div class="badge">{{ $logement->type_bien }}</div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="card-title">
+                            <a href="{{ route('logement.show', $logement->id) }}">
+                                {{ $logement->titre }}
+                            </a>
+                        </div>
+
+                        <div class="card-sub">{{ $logement->ville }}</div>
+
+                        <div class="card-price">
+                            {{ $logement->prix }} {{ $logement->devise }} par {{ $logement->type_location }}
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
+@empty
+    <div class="section">
+        <p>Aucun logement trouvé.</p>
+    </div>
+@endforelse
 
 @endsection
