@@ -48,4 +48,8 @@ public function villeRelation()
     {
         return $this->hasMany(Avis::class);
     }
+    public function reservations()
+{
+    return $this->hasMany(\App\Models\Reservation::class);
+}
 }

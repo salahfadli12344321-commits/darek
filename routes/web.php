@@ -33,3 +33,9 @@ Route::get('/marrakech' , function(){
 
 
 Route::get('/content', [ContentController::class, 'index'])->name('content');
+Route::get('/experiences', function () {
+    return view('pages.experiences');
+})->name('experiences.index');
+Route::get('/experiences/{slug}', function ($slug) {
+    return view('pages.experience-detail', compact('slug'));
+})->name('experiences.show');

@@ -22,8 +22,7 @@
 
 <nav class="top-nav">
 <a href="{{ route('content') }}" class="top-link active">Logements</a>
-<a href="#" class="top-link">Expériences</a>
-<a href="{{ route('pages.create') }}" class="top-link">Devenir hôte</a>
+<a href="{{ route('experiences.index') }}" class="nav-link">Expériences</a><a href="{{ route('pages.create') }}" class="top-link">Devenir hôte</a>
 </nav>
 
 <div class="top-actions">
@@ -650,17 +649,7 @@ margin:6px 0;
             font-size:12px;
         }
 
-        .host-btn{
-            margin-top:16px;
-            width:100%;
-            border:none;
-            padding:15px 18px;
-            border-radius:18px;
-            background:var(--sage-dark);
-            color:#fff;
-            font-weight:800;
-            cursor:pointer;
-        }
+       
 
         /* DETAIL PAGE */
         .detail-page{

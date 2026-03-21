@@ -1371,18 +1371,18 @@
 
 
 @endsection 
-@extends('shared.app')
+{{-- @extends('shared.app')
 
 @section('content')
 
-@forelse($logementsParVille as $ville => $logements)
-    <section class="section">
+{{-- @forelse($logementsParVille as $ville => $logements) --}}
+    {{-- <section class="section">
         <div class="section-head">
             <div class="section-title">Logements à {{ $ville }}</div>
         </div>
 
-        <div class="cards">
-            @foreach($logements as $logement)
+        <div class="cards"> --}}
+            {{-- @foreach($logements as $logement)
                 <div class="card">
                     <div class="card-img">
                         <a href="{{ route('logement.show', $logement->id) }}">
@@ -1410,11 +1410,11 @@
                 </div>
             @endforeach
         </div>
-    </section>
-@empty
+    {{-- </section> --}}
+{{-- @empty
     <div class="section">
         <p>Aucun logement trouvé.</p>
-    </div>
-@endforelse
+    </div> --}}
+{{-- @endforelse --}}
 
-@endsection
+{{-- @endsection  --}}

@@ -620,7 +620,7 @@ margin:6px 0;
         <div class="tagline">AGENCE DU LOGEMENT</div>
         <div class="logo-script">Dark</div>
 
-     <form class="search search-lux" action="/home" method="GET" autocomplete="off">
+        <form class="search search-lux" action="/home" method="GET" autocomplete="off">
     <div class="search-destination">
         <div class="search-label">
             <span class="search-label-icon">🏡</span>

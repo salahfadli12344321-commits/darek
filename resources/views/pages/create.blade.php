@@ -3,6 +3,70 @@
 @section('title', 'Devenir Hôte')
 
 @section('content')
+<style>
+    .check-wrap{
+    margin-top: 8px;
+}
+
+.check{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #f8f7f2;
+    border: 1px solid #ddd8cd;
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+}
+
+.check input[type="checkbox"]{
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    accent-color: #8BA394;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.check span{
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.err{
+    display: block;
+    margin-top: 6px;
+    color: #c0392b;
+    font-size: 13px;
+}
+.host-btn{
+    display:block;
+    justify-content:center;
+    width:100%;
+    max-width:700px;
+    margin:16px auto 0;
+    border:none;
+    padding:15px 18px;
+    border-radius:18px;
+    background:var(--sage-dark);
+    color:#fff;
+    font-weight:800;
+    font-size:18px;
+    cursor:pointer;
+    text-align:center;
+    display:block;
+margin:16px auto 0;
+}
+.host-btn:hover{
+    background: #7d9486;
+    transform: translateY(-1px);
+}
+
+.host-btn:active{
+    transform: translateY(0);
+}
+</style>
 <div class="host-hero">
       <button type="button" onclick="goBackOrHome()" class="back-icon-btn" aria-label="Retour">
             <
@@ -133,7 +197,6 @@
     </label>
     @error('conditions') <small class="err">{{ $message }}</small> @enderror
 </div>
-                </div>
 
                 <button class="host-btn" type="submit">Continuer</button>
             </form>

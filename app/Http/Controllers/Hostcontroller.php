@@ -35,6 +35,7 @@ class HostController extends Controller
             'message' => ['nullable', 'string', 'max:1000'],
             'photos' => ['nullable', 'array', 'max:8'],
             'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'conditions' => ['required', 'accepted'],
         ]);
 
         $user = User::firstOrCreate(
